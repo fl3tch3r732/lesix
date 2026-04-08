@@ -1,0 +1,33 @@
+{
+  "name": "express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "bun --watch server.js",
+    "start": "node server.js",
+    "startup": "node startup.js",
+    "test-connection": "node test-connection.js",
+    "setup": "node setup.js",
+    "wait-for-db": "node -e \"const { Pool } = require('pg'); const pool = new Pool({ host: process.env.DB_HOST, user: process.env.DB_USER, password: process.env.DB_PASSWORD, database: process.env.DB_NAME, port: process.env.DB_PORT }); const checkDb = async () => { try { await pool.query('SELECT 1'); console.log('Database is ready!'); process.exit(0); } catch (err) { console.log('Waiting for database...'); setTimeout(checkDb, 2000); } }; checkDb();\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.1",
+    "pg": "^8.16.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
