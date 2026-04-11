@@ -131,6 +131,27 @@ export const classroomsAPI = {
     }),
 };
 
+// Classes API
+export const classesAPI = {
+  getAll: () => apiCall('/classes'),
+  getById: (id: number) => apiCall(`/classes/${id}`),
+  getByDepartment: (department: string) => apiCall(`/classes/department/${department}`),
+  create: (classData: any) =>
+    apiCall('/classes', {
+      method: 'POST',
+      body: JSON.stringify(classData),
+    }),
+  update: (id: number, classData: any) =>
+    apiCall(`/classes/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(classData),
+    }),
+  delete: (id: number) =>
+    apiCall(`/classes/${id}`, {
+      method: 'DELETE',
+    }),
+};
+
 // Time Slots API
 export const timeSlotsAPI = {
   getAll: () => apiCall('/timeslots'),

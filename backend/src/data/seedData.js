@@ -8,6 +8,7 @@ export const seedData = async () => {
     console.log('Cleaning up existing data...');
     await pool.query('DELETE FROM time_slots');
     await pool.query('DELETE FROM classrooms');
+    await pool.query('DELETE FROM classes');
     await pool.query('DELETE FROM courses');
     await pool.query('DELETE FROM teachers');
     await pool.query('DELETE FROM users');
@@ -154,14 +155,43 @@ export const seedData = async () => {
     }
     console.log('Classrooms seeded successfully');
 
+    // Seed classes/student groups
+    const classesData = [
+      {
+        name: 'GIINFO1',
+        department: 'GI',
+        student_count: 35
+      },
+      {
+        name: 'GIINFO2',
+        department: 'GI',
+        student_count: 32
+      },
+      {
+        name: 'GIINFO3',
+        department: 'GI',
+        student_count: 30
+      }
+    ];
+
+    for (const classData of classesData) {
+      await pool.query(
+        'INSERT INTO classes (name, department, student_count) VALUES ($1, $2, $3) ON CONFLICT (name) DO NOTHING',
+        [classData.name, classData.department, classData.student_count]
+      );
+    }
+    console.log('Classes seeded successfully');
+
     // Get IDs for time slots - query in creation order to get consistent teacher
     const paauneResult = await pool.query('SELECT id FROM users WHERE email = \'paune@example.cm\' AND role = \'teacher\'');
     const coursesResult = await pool.query('SELECT id FROM courses WHERE code = \'GI101\' LIMIT 1');
     const classroomsResult = await pool.query('SELECT id FROM classrooms ORDER BY id LIMIT 1');
+    const classesResult = await pool.query('SELECT id FROM classes WHERE name = \'GIINFO1\' LIMIT 1');
 
     const paauneId = paauneResult.rows[0]?.id;
     const courseId = coursesResult.rows[0]?.id;
     const classroomId = classroomsResult.rows[0]?.id;
+    const classId = classesResult.rows[0]?.id;
 
     // Seed time slots - use current date/time for testing
     // Always create a slot that is currently active (from 8 AM to 6 PM every day)
@@ -170,13 +200,13 @@ export const seedData = async () => {
     const startTime = new Date(today.getTime() + 8 * 60 * 60 * 1000); // 8 AM today
     const endTime = new Date(today.getTime() + 18 * 60 * 60 * 1000); // 6 PM today
 
-    if (paauneId && courseId && classroomId) {
+    if (paauneId && courseId && classroomId && classId) {
       // Delete existing timeslot to avoid duplicates
       await pool.query('DELETE FROM time_slots');
       
       await pool.query(
-        'INSERT INTO time_slots (title, start_time, end_time, classroom_id, teacher_id, course_id, color, teacher_confirmed) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-        ['Maintenance et Administration des Reseaux', startTime, endTime, classroomId, paauneId, courseId, '#3b82f6', false]
+        'INSERT INTO time_slots (title, start_time, end_time, classroom_id, teacher_id, course_id, class_id, color, teacher_confirmed) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+        ['Maintenance et Administration des Reseaux', startTime, endTime, classroomId, paauneId, courseId, classId, '#3b82f6', false]
       );
       console.log(`Time slots seeded for teacher ${paauneId} (${paauneId === 2 ? 'Pr. Paune' : 'other'})`);
     } else {

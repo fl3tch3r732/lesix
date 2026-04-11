@@ -18,6 +18,7 @@ const getIcon = (iconName: string) => {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
 
@@ -27,11 +28,23 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
 
   return (
     <div className="flex h-screen bg-gray-100">
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={`bg-primary-800 text-white transition-all duration-300 ease-in-out ${
           sidebarCollapsed ? 'w-16' : 'w-64'
-        } fixed h-full z-10`}
+        } fixed h-full z-40 md:relative md:z-10 ${
+          !mobileMenuOpen && sidebarCollapsed ? 'hidden md:block' : ''
+        } ${
+          mobileMenuOpen ? 'block' : 'hidden md:block'
+        }`}
       >
         <div className="flex items-center justify-between p-4 border-b border-primary-700">
           {!sidebarCollapsed && (
@@ -105,16 +118,26 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
       </aside>
 
       {/* Main Content */}
-      <div className={`flex-1 ${sidebarCollapsed ? 'ml-16' : 'ml-64'} transition-all duration-300`}>
+      <div className={`flex-1 ${sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'} transition-all duration-300 overflow-hidden`}>
         {/* Header */}
-        <header className="bg-white shadow-sm">
-          <div className="px-6 py-4">
-            <h1 className="text-2xl font-semibold text-gray-800">{title}</h1>
+        <header className="bg-white shadow-sm sticky top-0 z-20">
+          <div className="px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 hover:bg-gray-100 rounded-lg"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <h1 className="text-xl md:text-2xl font-semibold text-gray-800">{title}</h1>
+            </div>
           </div>
         </header>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-4 md:p-6 overflow-y-auto" style={{ height: 'calc(100vh - 80px)' }}>
           {children}
         </div>
       </div>

@@ -6,6 +6,7 @@ import userRoutes from "./src/routes/userRoutes.js";
 import teacherRoutes from "./src/routes/teacherRoutes.js";
 import courseRoutes from "./src/routes/courseRoutes.js";
 import classroomRoutes from "./src/routes/classroomRoutes.js";
+import classesRoutes from "./src/routes/classesRoutes.js";
 import timeSlotRoutes from "./src/routes/timeSlotRoutes.js";
 import { createAllTables } from "./src/data/createTables.js";
 import { seedData } from "./src/data/seedData.js";
@@ -23,6 +24,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/classrooms", classroomRoutes);
+app.use("/api/classes", classesRoutes);
 app.use("/api/timeslots", timeSlotRoutes);
 
 // Endpoint to create all tables (for setup)

@@ -33,10 +33,12 @@ export interface TimeSlot {
   classroom_id: number;
   teacher_id: number;
   course_id: number;
+  class_id?: number;
   color?: string;
   course_name?: string;
   teacher_name?: string;
   classroom_name?: string;
+  class_name?: string;
   teacher_confirmed?: boolean;
   confirmed_at?: string;
   created_at?: string;
@@ -46,6 +48,14 @@ export interface Classroom {
   id: number;
   name: string;
   capacity: number;
+}
+
+export interface Class {
+  id: number;
+  name: string;
+  department: string;
+  student_count: number;
+  created_at?: string;
 }
 
 export interface Teacher {

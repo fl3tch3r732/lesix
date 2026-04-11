@@ -82,6 +82,25 @@ export const createClassroomsTable = async () => {
     }
 }
 
+// Classes/Student Groups table
+export const createClassesTable = async () => {
+    const query = `
+        CREATE TABLE IF NOT EXISTS classes (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(50) NOT NULL UNIQUE,
+            department VARCHAR(10) NOT NULL CHECK (department IN ('GI', 'ASR', 'GL', 'GRT')),
+            student_count INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `;
+    try {
+        await pool.query(query);
+        console.log("Table classes created successfully!");
+    } catch (error) {
+        console.error("Error creating classes table:", error);
+    }
+}
+
 // Time slots table
 export const createTimeSlotsTable = async () => {
     const query = `
@@ -93,6 +112,7 @@ export const createTimeSlotsTable = async () => {
             classroom_id INTEGER REFERENCES classrooms(id),
             teacher_id INTEGER REFERENCES users(id),
             course_id INTEGER REFERENCES courses(id),
+            class_id INTEGER REFERENCES classes(id),
             color VARCHAR(7),
             teacher_confirmed BOOLEAN DEFAULT FALSE,
             confirmed_at TIMESTAMP,
@@ -114,6 +134,7 @@ export const createAllTables = async () => {
         await createTeachersTable();
         await createCoursesTable();
         await createClassroomsTable();
+        await createClassesTable();
         await createTimeSlotsTable();
         console.log("All tables created successfully!");
     } catch (error) {

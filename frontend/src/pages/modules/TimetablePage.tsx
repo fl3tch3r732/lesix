@@ -153,61 +153,62 @@ const TimetablePage: React.FC = () => {
 
   return (
     <DashboardLayout title="Emploi du Temps">
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Emploi du Temps</h1>
-            <p className="text-gray-600">Gestion des plannings et horaires</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Emploi du Temps</h1>
+            <p className="text-gray-600 text-sm md:text-base">Gestion des plannings et horaires</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2 w-full sm:w-auto flex-col sm:flex-row">
             <button
               onClick={handleRefresh}
-              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md transition-colors"
+              className="flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 md:px-4 py-2 rounded-md transition-colors text-sm"
             >
               <RefreshCw size={16} />
-              Actualiser
+              <span className="hidden sm:inline">Actualiser</span>
             </button>
             {user?.role === 'admin' && (
               <button 
                 onClick={() => setShowCreateForm(true)}
-                className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md transition-colors"
+                className="flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-3 md:px-4 py-2 rounded-md transition-colors text-sm"
               >
                 <Plus size={16} />
-                Ajouter un cours
+                <span className="hidden sm:inline">Ajouter un cours</span>
+                <span className="sm:hidden">Ajouter</span>
               </button>
             )}
           </div>
         </div>
 
         {/* View Toggle */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setSelectedView('timeGridWeek')}
-            className={`px-4 py-2 rounded-md transition-colors ${
+            className={`px-3 md:px-4 py-2 rounded-md transition-colors text-sm ${
               selectedView === 'timeGridWeek'
                 ? 'bg-primary-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Vue Semaine
+            Semaine
           </button>
           <button
             onClick={() => setSelectedView('dayGridMonth')}
-            className={`px-4 py-2 rounded-md transition-colors ${
+            className={`px-3 md:px-4 py-2 rounded-md transition-colors text-sm ${
               selectedView === 'dayGridMonth'
                 ? 'bg-primary-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Vue Mois
+            Mois
           </button>
         </div>
 
         {/* Help Note */}
         {user?.role === 'admin' && (
-          <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-            <p className="text-sm text-blue-700">
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-3 text-sm">
+            <p className="text-blue-700">
               💡 <strong>Astuce:</strong> Cliquez sur un cours dans le calendrier pour voir ses détails et le supprimer si nécessaire.
             </p>
           </div>
@@ -215,15 +216,15 @@ const TimetablePage: React.FC = () => {
         
         {/* Non-admin notice */}
         {user?.role !== 'admin' && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-            <p className="text-sm text-yellow-700">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 text-sm">
+            <p className="text-yellow-700">
               ℹ️ <strong>Note:</strong> Seuls les administrateurs peuvent ajouter, modifier ou supprimer des créneaux horaires.
             </p>
           </div>
         )}
 
         {/* Calendar */}
-        <div className="bg-white rounded-lg shadow-sm border">
+        <div className="bg-white rounded-lg shadow-sm border overflow-x-auto">
           <style>
             {`
               .fc-event {
@@ -233,6 +234,18 @@ const TimetablePage: React.FC = () => {
               .fc-event:hover {
                 transform: scale(1.02);
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+              }
+              .fc-col-time-frame {
+                position: relative;
+              }
+              @media (max-width: 640px) {
+                .fc {
+                  font-size: 0.85em;
+                }
+                .fc-button {
+                  padding: 0.25rem 0.5rem;
+                  font-size: 0.8em;
+                }
               }
             `}
           </style>
@@ -267,22 +280,22 @@ const TimetablePage: React.FC = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-sm font-medium text-gray-500">Total Cours</h3>
-            <p className="text-2xl font-bold text-gray-900">{events.length}</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+          <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border">
+            <h3 className="text-xs md:text-sm font-medium text-gray-500 truncate">Total Cours</h3>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">{events.length}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-sm font-medium text-gray-500">Salles</h3>
-            <p className="text-2xl font-bold text-gray-900">{classrooms.length}</p>
+          <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border">
+            <h3 className="text-xs md:text-sm font-medium text-gray-500 truncate">Salles</h3>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">{classrooms.length}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-sm font-medium text-gray-500">Enseignants</h3>
-            <p className="text-2xl font-bold text-gray-900">{teachers.length}</p>
+          <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border">
+            <h3 className="text-xs md:text-sm font-medium text-gray-500 truncate">Enseignants</h3>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">{teachers.length}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-sm font-medium text-gray-500">Cours</h3>
-            <p className="text-2xl font-bold text-gray-900">{courses.length}</p>
+          <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border">
+            <h3 className="text-xs md:text-sm font-medium text-gray-500 truncate">Cours</h3>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">{courses.length}</p>
           </div>
         </div>
       </div>

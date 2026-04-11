@@ -192,54 +192,48 @@ const ClassesPage: React.FC = () => {
 
   return (
     <DashboardLayout title="Gestion des Classes">
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Gestion des Classes</h1>
-            <p className="text-gray-600">État des salles et amphithéâtres</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Gestion des Classes</h1>
+            <p className="text-gray-600 text-sm md:text-base">État des salles et amphithéâtres</p>
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={handleRefresh}
-              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md transition-colors"
-            >
-              <RefreshCw size={16} />
-              Actualiser
-            </button>
-          </div>
+          <button
+            onClick={handleRefresh}
+            className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 md:px-4 py-2 rounded-md transition-colors text-sm md:text-base w-full sm:w-auto justify-center sm:justify-start"
+          >
+            <RefreshCw size={16} />
+            Actualiser
+          </button>
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                <input
-                  type="text"
-                  placeholder="Rechercher une classe..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                />
-              </div>
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border">
+          <div className="flex flex-col gap-4">
+            <div className="relative">
+              <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <input
+                type="text"
+                placeholder="Rechercher une classe..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              />
             </div>
-            <div className="flex gap-2">
-              <select
-                value={selectedFilter}
-                onChange={(e) => setSelectedFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                <option value="all">Toutes les classes</option>
-                <option value="Special">Labo, Amphi</option>
-              </select>
-            </div>
+            <select
+              value={selectedFilter}
+              onChange={(e) => setSelectedFilter(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+            >
+              <option value="all">Toutes les classes</option>
+              <option value="Special">Labo, Amphi</option>
+            </select>
           </div>
         </div>
 
         {/* Classrooms Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {filteredClassrooms.map((classroom) => {
             const isOccupied = isClassroomOccupied(classroom.id);
             const currentClass = getCurrentClassInfo(classroom.id);
@@ -248,44 +242,53 @@ const ClassesPage: React.FC = () => {
             return (
               <div 
                 key={classroom.id} 
-                className={`bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow ${getAvailabilityColor(classroom.id)}`}
+                className={`bg-white rounded-lg shadow-sm border p-4 md:p-6 hover:shadow-md transition-shadow ${getAvailabilityColor(classroom.id)}`}
               >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">{classroom.name}</h3>
+                <div className="flex justify-between items-start gap-3 mb-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-1 truncate">{classroom.name}</h3>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     {getAvailabilityIcon(classroom.id)}
-                    <span className={`text-sm font-medium ${isOccupied ? 'text-red-600' : 'text-green-600'}`}>
+                    <span className={`text-xs md:text-sm font-medium whitespace-nowrap ${isOccupied ? 'text-red-600' : 'text-green-600'}`}>
                       {getAvailabilityLabel(classroom.id)}
                     </span>
                   </div>
                 </div>
                 
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Users size={14} className="mr-2" />
+                <div className="space-y-2 md:space-y-3 mb-4">
+                  <div className="flex items-center text-xs md:text-sm text-gray-600">
+                    <Users size={14} className="mr-2 flex-shrink-0" />
                     <span>Capacité: {classroom.capacity} places</span>
                   </div>
                 </div>
                 
                 {/* Current/Next Class Info */}
                 {currentClass && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-md mb-3">
-                    <div className="flex items-center text-sm text-red-700 mb-1">
-                      <Clock size={14} className="mr-2" />
+                  <div className="p-2 md:p-3 bg-red-50 border border-red-200 rounded-md mb-3">
+                    <div className="flex items-center text-xs md:text-sm text-red-700 mb-1">
+                      <Clock size={14} className="mr-2 flex-shrink-0" />
                       <span className="font-medium">Cours en cours</span>
                     </div>
-                    <p className="text-sm text-red-600 font-medium">{currentClass.course_name || currentClass.title}</p>
+                    <p className="text-xs md:text-sm text-red-600 font-medium break-words">{currentClass.course_name || currentClass.title}</p>
+                    {currentClass.teacher_name && (
+                      <p className="text-xs text-red-500 truncate">Enseignant: {currentClass.teacher_name}</p>
+                    )}
+                    {currentClass.classroom_name && (
+                      <p className="text-xs text-red-500 truncate">Salle: {currentClass.classroom_name}</p>
+                    )}
+                    {currentClass.class_name && (
+                      <p className="text-xs text-red-500 truncate">Classe: {currentClass.class_name}</p>
+                    )}
                     <p className="text-xs text-red-500">
-                      {new Date(currentClass.start_time).toLocaleTimeString()} - {new Date(currentClass.end_time).toLocaleTimeString()}
+                      {new Date(currentClass.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(currentClass.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                     {/* If the logged-in user is the assigned teacher and hasn't confirmed yet, show button */}
                     {authUser && authUser.role === 'teacher' && authUser.id === currentClass.teacher_id && !currentClass.teacher_confirmed && (
                       <div className="mt-2">
                         <button
                           onClick={() => confirmPresence(currentClass.id)}
-                          className="bg-primary-600 text-white px-3 py-1 rounded hover:bg-primary-700 text-sm"
+                          className="bg-primary-600 text-white px-3 py-1 rounded hover:bg-primary-700 text-xs md:text-sm w-full"
                         >
                           Confirmer ma présence
                         </button>
@@ -295,14 +298,20 @@ const ClassesPage: React.FC = () => {
                 )}
                 
                 {!currentClass && nextClass && (
-                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
-                    <div className="flex items-center text-sm text-blue-700 mb-1">
-                      <Clock size={14} className="mr-2" />
+                  <div className="p-2 md:p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <div className="flex items-center text-xs md:text-sm text-blue-700 mb-1">
+                      <Clock size={14} className="mr-2 flex-shrink-0" />
                       <span className="font-medium">Prochain cours</span>
                     </div>
-                    <p className="text-sm text-blue-600 font-medium">{nextClass.course_name || nextClass.title}</p>
+                    <p className="text-xs md:text-sm text-blue-600 font-medium break-words">{nextClass.course_name || nextClass.title}</p>
+                    {nextClass.teacher_name && (
+                      <p className="text-xs text-blue-500 truncate">Enseignant: {nextClass.teacher_name}</p>
+                    )}
+                    {nextClass.class_name && (
+                      <p className="text-xs text-blue-500 truncate">Classe: {nextClass.class_name}</p>
+                    )}
                     <p className="text-xs text-blue-500">
-                      {new Date(nextClass.start_time).toLocaleTimeString()} - {new Date(nextClass.end_time).toLocaleTimeString()}
+                      {new Date(nextClass.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(nextClass.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
                 )}
