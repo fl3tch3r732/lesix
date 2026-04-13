@@ -195,23 +195,23 @@ export const seedData = async () => {
 
     // Seed time slots - use current date/time for testing
     // Always create a slot that is currently active (from 8 AM to 6 PM every day)
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const startTime = new Date(today.getTime() + 8 * 60 * 60 * 1000); // 8 AM today
-    const endTime = new Date(today.getTime() + 18 * 60 * 60 * 1000); // 6 PM today
+    //const now = new Date();
+    //const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    //const startTime = new Date(today.getTime() + 8 * 60 * 60 * 1000); // 8 AM today
+    //const endTime = new Date(today.getTime() + 18 * 60 * 60 * 1000); // 6 PM today
 
-    if (paauneId && courseId && classroomId && classId) {
+    //if (paauneId && courseId && classroomId && classId) {
       // Delete existing timeslot to avoid duplicates
-      await pool.query('DELETE FROM time_slots');
+      //await pool.query('DELETE FROM time_slots');
       
-      await pool.query(
-        'INSERT INTO time_slots (title, start_time, end_time, classroom_id, teacher_id, course_id, class_id, color, teacher_confirmed) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-        ['Maintenance et Administration des Reseaux', startTime, endTime, classroomId, paauneId, courseId, classId, '#3b82f6', false]
-      );
-      console.log(`Time slots seeded for teacher ${paauneId} (${paauneId === 2 ? 'Pr. Paune' : 'other'})`);
-    } else {
-      console.log(`Warning: Missing IDs - paauneId: ${paauneId}, courseId: ${courseId}, classroomId: ${classroomId}`);
-    }
+      //await pool.query(
+    //     'INSERT INTO time_slots (title, start_time, end_time, classroom_id, teacher_id, course_id, class_id, color, teacher_confirmed) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+    //     ['Maintenance et Administration des Reseaux', startTime, endTime, classroomId, paauneId, courseId, classId, '#3b82f6', false]
+    //   );
+    //   console.log(`Time slots seeded for teacher ${paauneId} (${paauneId === 2 ? 'Pr. Paune' : 'other'})`);
+    // } else {
+    //   console.log(`Warning: Missing IDs - paauneId: ${paauneId}, courseId: ${courseId}, classroomId: ${classroomId}`);
+    // }
 
     console.log('Database seeded successfully!');
   } catch (error) {

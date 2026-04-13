@@ -118,7 +118,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
       </aside>
 
       {/* Main Content */}
-      <div className={`flex-1 ${sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'} transition-all duration-300 overflow-hidden`}>
+      <div className="flex-1 transition-all duration-300 overflow-hidden">
         {/* Header */}
         <header className="bg-white shadow-sm sticky top-0 z-20">
           <div className="px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
